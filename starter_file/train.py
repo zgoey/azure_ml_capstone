@@ -2,6 +2,7 @@ import argparse
 from sklearn.model_selection import cross_validate
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import LabelEncoder
+from sklearn.neighbors import KNeighborsClassifier 
 from azureml.core.run import Run
 from azureml.core import Dataset
 import numpy as np
@@ -18,25 +19,25 @@ def main():
     parser.add_argument('--n_neighbors', type=int, default=10, 
     help="Number of neighbors to consider")
     parser.add_argument('--weights', choices=['uniform', 'distance'], 
-    default='None', help="Sample weighting method")
+    default='uniform', help="Sample weighting method")
     parser.add_argument('--embedding', choices=['none', 'lab', 'nca'], 
-    default='None', help="Type of feature embedding")
+    default='none', help="Type of feature embedding")
     
     args = parser.parse_args()
     
     # Fetch the data
-    df = pandas.csv_read(
-    "https://github.com/zgoey/azure_ml_capstone/blob/master/color_shades.csv")
-    #df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
+    #df = pandas.read_csv(
+    #"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
+    df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
 
     # Separate features and target
     x = df[['Red','Green','Blue']].to_numpy()
-    le = preprocessing.LabelEncoder()
+    le = LabelEncoder()
     y = le.fit_transform(df['Shade'])
 
     # Setup the run
     run = Run.get_context()
-    run.log("Number of neighbors:", np.int(args.n_neighnors))
+    run.log("Number of neighbors:", np.int(args.n_neighbors))
     run.log("Sample weights:", args.weights)
     run.log("Feature embedding:", args.embedding)
     
