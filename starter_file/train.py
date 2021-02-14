@@ -1,16 +1,26 @@
 import argparse
 from sklearn.model_selection import cross_validate
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import LabelEncoder
-from sklearn.neighbors import KNeighborsClassifier 
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neighbors import NeighborhoodComponentsAnalysis
+from sklearn.base import BaseEstimator, TransformerMixin
 from azureml.core.run import Run
-from azureml.core import Dataset
+from azureml.core import Dataset, Workspace
 import numpy as np
 import pandas
-from matplotlib import colors as mcolors
+from skimage import color
+       
+class LabTransformer():
 
-def lab(x):
-    return color.rgb2lab(x.astype(np.uint8)).astype(np.float32)
+    # here you define the operation it should perform
+    def transform(self, X, y=None, **fit_params):
+        return color.rgb2lab(X.astype(np.uint8)).astype(np.float32)
+
+    # just return self
+    def fit(self, X, y=None, **fit_params):
+        return self
+
     
 def main():
     # Add arguments to script
@@ -18,17 +28,21 @@ def main():
 
     parser.add_argument('--n_neighbors', type=int, default=10, 
     help="Number of neighbors to consider")
-    parser.add_argument('--weights', choices=['uniform', 'distance'], 
-    default='uniform', help="Sample weighting method")
-    parser.add_argument('--embedding', choices=['none', 'lab', 'nca'], 
-    default='none', help="Type of feature embedding")
+    parser.add_argument('--weights',  type=int, choices=range(2), 
+    default=0, help="Sample weighting method")
+    parser.add_argument('--embedding', type=int, choices=range(3), 
+    default=0, help="Type of feature embedding")
     
     args = parser.parse_args()
     
+    weights_dict = {0:'uniform', 1:'distance'}
+    embedding_dict = {0:'none', 1:'lab', 2:'nca'}
+    
     # Fetch the data
-    #df = pandas.read_csv(
-    #"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
-    df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
+    df = pandas.read_csv(
+    "https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
+    #ws = Workspace.from_config()
+    #df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
 
     # Separate features and target
     x = df[['Red','Green','Blue']].to_numpy()
@@ -38,16 +52,17 @@ def main():
     # Setup the run
     run = Run.get_context()
     run.log("Number of neighbors:", np.int(args.n_neighbors))
-    run.log("Sample weights:", args.weights)
-    run.log("Feature embedding:", args.embedding)
+    run.log("Sample weights:", weights_dict[args.weights])
+    run.log("Feature embedding:", embedding_dict[args.embedding])
     
     neigh = KNeighborsClassifier(n_neighbors=args.n_neighbors, 
-    weights=args.weights)
+    weights=weights_dict[args.weights])
     
     # Setup the model
-    if args.embedding == 'lab':
+    if embedding_dict[args.embedding] == 'lab':
+        lab = LabTransformer()
         model = Pipeline([('embedder', lab), ('knn', neigh)])
-    elif args.embedding == 'nca':
+    elif embedding_dict[args.embedding] == 'nca':
         nca = NeighborhoodComponentsAnalysis()
         model = Pipeline([('embedder', nca), ('knn', neigh)])
     else:
