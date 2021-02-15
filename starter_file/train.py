@@ -9,9 +9,9 @@ from azureml.core.run import Run
 from azureml.core import Dataset, Workspace
 import numpy as np
 import pandas
-from skimage import color
 import joblib
 import os
+from transformer import LabTransformer
        
     
 def main():
@@ -27,24 +27,14 @@ def main():
     
     args = parser.parse_args()
     
-    class LabTransformer():
-        # here you define the operation it should perform
-        def transform(self, X, y=None, **fit_params):
-            return color.rgb2lab(X.astype(np.uint8)).astype(np.float32)
-
-        # just return self
-        def fit(self, X, y=None, **fit_params):
-            return self
-
-    
     weights_dict = {0:'uniform', 1:'distance'}
     embedding_dict = {0:'none', 1:'lab', 2:'nca'}
     
     # Fetch the data
-    df = pandas.read_csv(
-    "https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
-    #ws = Workspace.from_config()
-    #df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
+    #df = pandas.read_csv(
+    #"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
+    ws = Workspace.from_config()
+    df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
 
     # Separate features and target
     x = df[['Red','Green','Blue']].to_numpy()
@@ -74,6 +64,9 @@ def main():
     cv_results = cross_validate(model, x, y, cv=5)
     accuracy = np.mean(cv_results['test_score'])
     run.log("Accuracy", np.float(accuracy))
+    
+    # Train final model
+    neigh.fit(x,y)
     
     # Save the model
     os.makedirs('outputs', exist_ok=True)
