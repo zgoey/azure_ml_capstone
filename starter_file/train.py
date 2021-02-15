@@ -10,17 +10,9 @@ from azureml.core import Dataset, Workspace
 import numpy as np
 import pandas
 from skimage import color
+import joblib
+import os
        
-class LabTransformer():
-
-    # here you define the operation it should perform
-    def transform(self, X, y=None, **fit_params):
-        return color.rgb2lab(X.astype(np.uint8)).astype(np.float32)
-
-    # just return self
-    def fit(self, X, y=None, **fit_params):
-        return self
-
     
 def main():
     # Add arguments to script
@@ -34,6 +26,16 @@ def main():
     default=0, help="Type of feature embedding")
     
     args = parser.parse_args()
+    
+    class LabTransformer():
+        # here you define the operation it should perform
+        def transform(self, X, y=None, **fit_params):
+            return color.rgb2lab(X.astype(np.uint8)).astype(np.float32)
+
+        # just return self
+        def fit(self, X, y=None, **fit_params):
+            return self
+
     
     weights_dict = {0:'uniform', 1:'distance'}
     embedding_dict = {0:'none', 1:'lab', 2:'nca'}
@@ -72,6 +74,11 @@ def main():
     cv_results = cross_validate(model, x, y, cv=5)
     accuracy = np.mean(cv_results['test_score'])
     run.log("Accuracy", np.float(accuracy))
+    
+    # Save the model
+    os.makedirs('outputs', exist_ok=True)
+    joblib.dump(model, 'outputs/model.pkl')
+
 
 if __name__ == '__main__':
     main()
