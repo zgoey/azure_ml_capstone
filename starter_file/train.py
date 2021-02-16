@@ -24,7 +24,7 @@ parser.add_argument('--weights',  type=int, choices=range(2),
 default=0, help="Sample weighting method")
 parser.add_argument('--embedding', type=int, choices=range(3), 
 default=0, help="Type of feature embedding")
-parser.add_argument('--data_folder', type=str, default='data', help="Data folder mounting point")
+parser.add_argument('--data_path', type=str, default='data', help="Data folder mounting point")
 
 args = parser.parse_args()
 
@@ -32,9 +32,7 @@ weights_dict = {0:'uniform', 1:'distance'}
 embedding_dict = {0:'none', 1:'lab', 2:'nca'}
 
 # Fetch the data
-#df = pandas.read_csv(
-#"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
-data_path = glob.glob(args.data_folder, recursive=True)[0]
+data_path = glob.glob(args.data_path, recursive=True)[0]
 df = pandas.read_csv(data_path)
 
 # Separate features and target
