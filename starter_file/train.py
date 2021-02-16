@@ -12,8 +12,9 @@ import pandas
 from skimage import color
 import joblib
 import os
+import glob
+from labtransformer import LabTransformer
 
-# +
 # Add arguments to script
 parser = argparse.ArgumentParser()
 
@@ -23,27 +24,18 @@ parser.add_argument('--weights',  type=int, choices=range(2),
 default=0, help="Sample weighting method")
 parser.add_argument('--embedding', type=int, choices=range(3), 
 default=0, help="Type of feature embedding")
+parser.add_argument('--data_folder', type=str, default='data', help="Data folder mounting point")
 
 args = parser.parse_args()
-
-class LabTransformer():
-    # here you define the operation it should perform
-    def transform(self, X, y=None, **fit_params):
-        return color.rgb2lab(X.astype(np.uint8)).astype(np.float32)
-
-    # just return self
-    def fit(self, X, y=None, **fit_params):
-        return self
-
 
 weights_dict = {0:'uniform', 1:'distance'}
 embedding_dict = {0:'none', 1:'lab', 2:'nca'}
 
 # Fetch the data
-df = pandas.read_csv(
-"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
-#ws = Workspace.from_config()
-#df = Dataset.get_by_name(workspace, 'color_shades').to_pandas_dataframe()
+#df = pandas.read_csv(
+#"https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv")
+data_path = glob.glob(args.data_folder, recursive=True)[0]
+df = pandas.read_csv(data_path)
 
 # Separate features and target
 x = df[['Red','Green','Blue']].to_numpy()
@@ -75,7 +67,7 @@ accuracy = np.mean(cv_results['test_score'])
 run.log("Accuracy", np.float(accuracy))
 
 # Fit model
-neigh.fit(x,y)
+model.fit(x,y)
 
 # Save the model
 os.makedirs('outputs', exist_ok=True)
