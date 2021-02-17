@@ -182,7 +182,11 @@ Like in our AutoML experiment, we choose accuracy as our primary metric and appl
 
 
 ## Model Deployment
-We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better we have only documented that one in detail. It takes in a list of Red-Green-Blue dictionaries and produces a list od color shade strings as a response. The exact way to address the model can be found in the [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py).
+We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better we have only documented that one in detail. It takes in a list of Red-Green-Blue dictionaries and produces a list od color shade strings as a response. The exact way to address the model endpoint can be found in the [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py).
+
+The picture below (taken from the screencast) shows the active model endpoint:
+
+![image](automl_model_endpoint.png)
 
 ## Screen Recording
 A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik.
