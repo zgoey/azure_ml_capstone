@@ -195,11 +195,33 @@ A brief look at the 3D scatter chart of the top 10 runs and the one of all runs 
 ![image](hyperdrive_all.png)
 
 ## Model Deployment
-We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The exact way to address this endpoint can be found in [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py). Basically, the endpoint takes in a list of Red-Green-Blue dictionaries and produces a list of color shade strings as a response. 
+We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The environment file and scoring are automatically created during the AutoML training and can be found in the outputs directory after the AutoML experiment has finished. In [automl.ipynb](automl.ipynb) we copy them to the notebook directory in the last two cells before "Model Deployment" and then use them in the creation of the model endpoint.
 
-In the picture below (taken from the screencast), one can see the active model endpoint:
+In the picture below (taken from the screencast), one can see the endpoint in its active state:
 
 ![image](automl_model_endpoint.png)
+
+Under REST endpoint (see the picture), we find the address that we can use to access the web service. If one clicks on "Consume" to the right of the "Details" tab, some sample code is provided that specifies how to send a request to the endpoint. Basically, the endpoint takes in a list of Red-Green-Blue dictionaries:
+
+```
+data = {
+    "data":
+    [
+        {
+            'Red': "24",
+            'Green': "250",
+            'Blue': "10",
+        },
+         {
+            'Red': "0",
+            'Green': "23",
+            'Blue': "200",
+        },
+    ],
+}
+```
+It then produces a list of color shade strings as a response. The exact way to address this endpoint can be found in [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py). 
+
 
 ## Screen Recording
 A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik. It shows the registered mode and its endpoint, and it demonstrates how the endpoint can be used to classify a RGB-sample.
