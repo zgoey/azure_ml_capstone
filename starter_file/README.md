@@ -154,7 +154,7 @@ Its base learners are:
 |                                         | subsample_for_bin=200000, subsample_freq=0,    |
 |                                         | verbose=-10                                    |
 
-A better model may be found if we allow AutoML to run longer than 1 hour. Actually, our hyperparameter search ran much longer than that, so it would only be fair to give AutoML a little bit more space in this respect. However, since the top-10%-accuracies that are found appear to lie within a pretty narrow bandwidth, we do not really expect any huge improvements.
+A better model may be found if we allow AutoML to run longer than 1 hour.
 
 Below, is a screenshot of the RunDetails widget created while running auto_ml.ipynb:
 
