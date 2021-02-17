@@ -3,16 +3,16 @@
 In this project we try to build a color shade classifier for RGB-triplets that can help colorblind people determine what color they are looking at. We train classifiers using AutoML and hyperparameter optimization and deploy the best model to a webservice that can then be accessed by a color shade app to determine the shade of a color match. This last step, however, is outside the scope of this project, which focuses on the machine learning part.
 
 ## Project Set Up and Installation
-The project consists of two notebooks, automl.ipynb and hyperparameter_tuning.ipynb, which run by default on any standard compute in AzureML. The only adaptation that we recommend to make to the standard configuration is to update the version of the AzureML SDK to match the one used on the compute clusters, thus preventing warnings when printing out AutoML model details. Another issue to remember is that the notebooks require to have the wokspace configuration (config.json) inside their directories. 
+The project consists of two notebooks, [automl.ipynb](endpoint_automl.py) and [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb), which run by default on any standard compute in AzureML. The only adaptation that we recommend to make to the standard configuration is to update the version of the AzureML SDK to match the one used on the compute clusters, thus preventing warnings when printing out AutoML model details. Another issue to remember is that the notebooks require to have the wokspace configuration (config.json) inside their directories. 
 
-This repository included the environment (.yml) files and scoring scripts needed for deployment. In case of the AutoML experiment these are generated while running the notebook. The environment script for the deployment of the hyperdrive model is also generated within the notebook, but the scoring script hyperdrive_score.py needs to be uploaded in advance to the directory where hyperparameter_tuning.ipynb resides. 
+This repository included the environment (.yml) files and scoring scripts needed for deployment. In case of the AutoML experiment these are generated while running the notebook. The environment script for the deployment of the hyperdrive model is also generated within the notebook, but the scoring script [hyperdrive_score.py](hyperdrive_score.py) needs to be uploaded in advance to the directory where [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb) resides. 
 
 ## Dataset
 
 ### Overview
 The dataset that we use can be downloaded from: https://github.com/zgoey/azure_ml_capstone/blob/master/color_shades.csv. 
 Each data sample contains of a RGB-triplet and an associated basic color shade. The shades that we discern are 
-white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. The notebook automl.ipynb explains in detail how this dataset was generated. 
+white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. The notebook [automl.ipynb](automl.ipynb) explains in detail how this dataset was generated. 
 
 
 ### Task
@@ -181,7 +181,7 @@ Like in our AutoML experiment, we choose accuracy as our primary metric and appl
 
 
 ## Model Deployment
-We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed better we have only documented that one in detail. It takes in a list of Red-Green-Blue dictionaries and produces a list od color shade strings as a response. The exact way to address the model can be found in the automl.ipynb (second cell under "Model Deployment"), or alternatively in endpoint_atoml.py.
+We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better we have only documented that one in detail. It takes in a list of Red-Green-Blue dictionaries and produces a list od color shade strings as a response. The exact way to address the model can be found in the [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py).
 
 ## Screen Recording
 A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik.
