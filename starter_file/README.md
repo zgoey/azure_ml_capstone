@@ -162,7 +162,8 @@ After registration, the best model found can be viewed in Azure ML Studio:
 
  ![image](automl_best_model.png)
  
- 
+The screenshot shows the AutoML run that was carried out  with to the right the summary of the registered best model (StackEnsemble with an accuracy of 0.81050).
+
 Further improvements could be made by allowing AutoML to run longer than 1 hour. In fact the hyperparameter tuning using HyperDrive takes up much more time, so it would be no  more than fair to let AutoML run longer. However, since the top 10% of all runs we have seen lie within a very narrow bandwidth, we do not expect any spectacular improvement.
  
 ## Hyperparameter Tuning
@@ -178,13 +179,15 @@ Like in our AutoML experiment, we choose accuracy as our primary metric and appl
 ### Results
 The best model resulting from our hyperparameter search used 33 distance-weighted neighbors in L\*a\*b\*-space and had an accuracy of 80.75%.  
 
-Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_ml.ipynb):
+Below is a screenshot of the RunDetails widget created in [hyperparameter_tuning.ipynb]hyperparameter_tuning.ipynb):
 
  ![image](hyperdrive_run_details.png)
  
 After registration, the best model can again be viewed in Azure ML Studio:
 
  ![image](hyperdrive_best_model.png)
+ 
+The screenshot shows the HyperDrive run corresponding to the model. To the left, we see that is has been registered as hyperdrive_color_shades and to the right we see the metrics that were logged by the training script [train.py](train.py) (accuracy: 0.807478122513922, samle weights; distance, embedding: lab, number of neighbors: 33). 
 
 A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
 
