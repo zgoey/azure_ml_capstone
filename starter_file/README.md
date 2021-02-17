@@ -44,6 +44,20 @@ Its base learners are:
 
 | Learner                                 | Hyperparameters                                |
 | ----------------------------------------|------------------------------------------------|
+|                                         | base_score=0.5, booster='gbtree',              |
+|                                         | colsample_bylevel=1, colsample_bynode=1,       |
+|                                         | colsample_bytree=1, eta=0.3, gamma=0.01,       |
+|                                         | learning_rate=0.1, max_delta_step=0,           |
+|                                         | max_depth=6, max_leaves=7,                     |
+|                                         | min_child_weight=1, missing=nan,               |
+|                                         | n_estimators=100, n_jobs=1, nthread=None,      |
+|                                         | objective='multi:softprob', random_state=0,    |
+|                                         | reg_alpha=1.4583333333333335,                  |
+|                                         | reg_lambda=0.625, scale_pos_weight=1,          |
+|                                         | seed=None, silent=None, subsample=0.5,         |
+|                                         | tree_method='auto', verbose=-10,               |
+|                                         | verbosity=0)                                   |
+|                                         |                                                |
 | StandardScalerWrapper XGBoostClassifier | base_score=0.5, booster='gbtree',              |
 |                                         | colsample_bylevel=1, colsample_bynode=1,       |
 |                                         | colsample_bytree=1, eta=0.05, gamma=0,         |
@@ -86,19 +100,6 @@ Its base learners are:
 |                                         | subsample=1, tree_method='auto', verbose=-10,  |
 |                                         | verbosity=0                                    |
 |                                         |                                                |
-| StandardScalerWrapper XGBoostClassifier | base_score=0.5, booster='gbtree',              |
-|                                         | colsample_bylevel=0.9, colsample_bynode=1,     |
-|                                         | colsample_bytree=1, eta=0.4, gamma=0,          |
-|                                         | learning_rate=0.1, max_delta_step=0,           |
-|                                         | max_depth=6, max_leaves=7,                     |
-|                                         | min_child_weight=1, missing=nan,               |
-|                                         | n_estimators=100, n_jobs=1, nthread=None,      |
-|                                         | objective='multi:softprob', random_state=0,    |
-|                                         | reg_alpha=0.8333333333333334,                  |
-|                                         | reg_lambda=2.291666666666667,                  |
-|                                         | scale_pos_weight=1, seed=None, silent=None,    |
-|                                         | subsample=1, tree_method='auto', verbose=-10,  |
-|                                         | verbosity=0                                    |
 |                                         |                                                |
 | StandardScalerWrapper LogisticRegression| C=1048.1131341546852, class_weight=None,       |
 |                                         | dual=False, fit_intercept=True,                |
