@@ -187,7 +187,7 @@ After registration, the best model can again be viewed in Azure ML Studio:
 
  ![image](hyperdrive_best_model.png)
  
-The screenshot shows the HyperDrive run corresponding to the model. To the left, we can see that it has been registered under the name "hyperdrive_color_shades" and to the right we see the metrics that were logged by the training script [train.py](train.py) (accuracy: 0.807478122513922, samle weights; distance, embedding: lab, number of neighbors: 33). 
+The screenshot shows the HyperDrive run corresponding to the best kNN model. To the left, we can see that it has been registered under the name "hyperdrive_color_shades" and to the right we see the metrics that were logged by the training script [train.py](train.py) (accuracy: 0.807478122513922, samle weights; distance, embedding: lab, number of neighbors: 33). 
 
 A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
 
@@ -227,7 +227,7 @@ It then produces a list of color shade strings as a response. The exact way to a
 
 
 ## Screen Recording
-A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik. It shows the registered mode and its endpoint, and it demonstrates how the endpoint can be used to classify a RGB-sample.
+A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik. It shows the registered model and its endpoint, and it demonstrates how the endpoint can be used to classify a RGB-sample.
 
 ## Future improvements ##
 To make this project better, the following ideas could be carried out in the future:
