@@ -159,6 +159,7 @@ Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_m
  ![image](automl_run_details.png)
  
 After registration, the best model found can be viewed in Azure ML Studio:
+
  ![image](automl_best_model.png)
  
  
@@ -182,6 +183,7 @@ Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_m
  ![image](hyperdrive_run_details.png)
  
 After registration, the best model can again be viewed in Azure ML Studio:
+
  ![image](hyperdrive_best_model.png)
 
 A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
@@ -191,6 +193,7 @@ A brief look at the 3D scatter chart of the top 10 runs and the one of all runs 
 
 *3D scatter chart of all runs*
 ![image](hyperdrive_all.png)
+
 ## Model Deployment
 We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The exact way to address this endpoint can be found in [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py). Basically, the endpoint takes in a list of Red-Green-Blue dictionaries and produces a list of color shade strings as a response. 
 
