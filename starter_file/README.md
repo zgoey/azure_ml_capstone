@@ -169,6 +169,10 @@ For the hyperparameter tuning, we use  a k-nearest-neighbor model, because it is
  3. Embedding preceding neighbor search (range = {'none', 'lab', 'nac'}
 Here 'lab' stands for an embedding in the (roughly) perceptually uniform  L\*a\*b\* color space, whereas 'nac' stands for Neighborhood Components Analysis. More details about these embeddings can be found in the notebook hyperparameter_tuning.ipynb.
 
+In the hyperparameter tuning procedure, we use Bayesian parameter sampling, because our hyperparamter sample space is relatively small and we have enough budget to explore it. 
+Like in our AutoML experiment, we choose accuracy as our primary metric and apply 5-fold cross-validation to be enhance the stability of its estimate. We do no set an early termination policy, because this is not supported when using Bayesian sampling. The running time, is hoever restricted by setting the maximum number of runs to 100. The maximum number of concurrent runs is set to 1, to let each run benefit fully from previously completed runs, which will enhance the sampling convergence.
+
+
 
 ### Results
 *TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
