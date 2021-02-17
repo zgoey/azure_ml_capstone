@@ -168,7 +168,7 @@ Further improvements could be made by allowing AutoML to run longer than 1 hour.
 ## Hyperparameter Tuning
 For the hyperparameter tuning, we use  a k-nearest-neighbor model, because it is simple and at the same time flexible enough to capture complicated decision boundaries. Using Bayesian parameter sampling, we try to optimize three hyperparameters:
  1. Number of neighbors (range = {1,2,...,100})
- 2. Neighbor voting weigts (range = {'uniform', 'distance'})
+ 2. Neighbor voting weights (range = {'uniform', 'distance'})
  3. Embedding preceding neighbor search (range = {'none', 'lab', 'nac'}
 Here 'lab' stands for an embedding in the (roughly) perceptually uniform  L\*a\*b\* color space, whereas 'nac' stands for Neighborhood Components Analysis. More details about these embeddings can be found in the notebook hyperparameter_tuning.ipynb.
 
@@ -195,13 +195,45 @@ A brief look at the 3D scatter chart of the top 10 runs and the one of all runs 
 ![image](hyperdrive_all.png)
 
 ## Model Deployment
-We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The exact way to address this endpoint can be found in [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py). Basically, the endpoint takes in a list of Red-Green-Blue dictionaries and produces a list of color shade strings as a response. 
+We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The environment file and scoring are automatically created during the AutoML training and can be found in the outputs directory after the AutoML experiment has finished. In [automl.ipynb](automl.ipynb) we copy them to the notebook directory in the last two cells before "Model Deployment" and then use them to define the inference configuration that is needed for the creation of the model endpoint. We use a deployment configuration with 1 CPU and 1GB memory. This is not necessarily an optimal configuration, but more of a working assumption inspired by example code that we have examined. Later on, we can carry out profiling to optimize out choices for the model at hand. 
 
-In the picture below (taken from the screencast), one can see the active model endpoint:
+In the picture below (taken from the screencast), one can see the endpoint in its active state:
 
 ![image](automl_model_endpoint.png)
 
+Under REST endpoint (see the picture), we find the address that we can use to access the web service. If one clicks on "Consume" to the right of the "Details" tab, some sample code is provided that specifies how to send a request to the endpoint. Basically, the endpoint takes in a list of Red-Green-Blue dictionaries:
+
+```
+data = {
+    "data":
+    [
+        {
+            'Red': "24",
+            'Green': "250",
+            'Blue': "10",
+        },
+         {
+            'Red': "0",
+            'Green': "23",
+            'Blue': "200",
+        },
+    ],
+}
+```
+It then produces a list of color shade strings as a response. The exact way to address this endpoint can be found in [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py). 
+
+
 ## Screen Recording
 A screencast demoing the AutoML model can be found in https://youtu.be/SowYZMnj0Ik. It shows the registered mode and its endpoint, and it demonstrates how the endpoint can be used to classify a RGB-sample.
+
+## Future improvements ##
+To make this project better, the following ideas could be carried out in the future:
+
+1. Train the AutoML longer to get a better classifier. 
+2. Carry out a second hyperparameter search to get better kNN parameters. This search should solely focus on the number of neighbors; the weighting should be fixed to "distance" (--weights 1) and the embedding to "lab" (--embedding 1), since our former search has shown that this parameter combination gives the best results.
+3. Give the web service a front end, so one can actually read in the RGB-values of color patches captured by a camera and get a color space back from the service
+4. Save the model in ONNX-format so that it can also be used off-line in different environments.
+5. Profile the model in order to determine the optimal deployment configuration.
+6. Add logging to the web service so we can adequately monitor its usage once it is in production.
 
 
