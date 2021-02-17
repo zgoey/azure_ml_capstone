@@ -5,7 +5,7 @@ In this project we try to build a color shade classifier for RGB-triplets that c
 ## Project Set Up and Installation
 The project consists of two notebooks, [automl.ipynb](endpoint_automl.py) and [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb), which run by default on any standard compute in AzureML. The only adaptation that we recommend to make to the standard configuration is to update the version of the AzureML SDK to match the one used on the compute clusters, thus preventing warnings when printing out AutoML model details. Another issue to remember is that the notebooks require to have the wokspace configuration (config.json) inside their directories. 
 
-This repository included the environment (.yml) files and scoring scripts needed for deployment. In case of the AutoML experiment these are generated while running the notebook. The environment script for the deployment of the hyperdrive model is also generated within the notebook, but the scoring script [hyperdrive_score.py](hyperdrive_score.py) needs to be uploaded in advance to the directory where [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb) resides. 
+This repository included the environment (.yml) files and scoring scripts needed for deployment. In case of the AutoML experiment these are generated while running the notebook. The environment script for the deployment of the HyperDrive model is also generated within the notebook, but the scoring script [hyperdrive_score.py](hyperdrive_score.py) needs to be uploaded in advance to the directory where [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb) resides. 
 
 ## Dataset
 
@@ -19,7 +19,7 @@ white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. Th
 The problem that we wish to solve is the determination of the color shade of color patches. The features that we are going to use for this are the values of the red, green and blue channel of the color patch. The notebook automl.ipynb trains AutoML mdoels to carry out this task and the notebook hyperparameter_tuning.ipynb tries to achieve the same using hyperparameter tuning of a k-nearest-neighbor model.
 
 ### Access
-Both notebooks contain code to upload the data from its Web location (or, to be precise, from https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv). Inside the notebooks a FileDataset is created in Azure from this web address. For the AutoML experiment the file is the downloaded locally and converted to a TabularDataset, which can be fed to AutoML. For the Hyperdrive experiment the FileDataset is passed to the training script as a mount.
+Both notebooks contain code to upload the data from its Web location (or, to be precise, from https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv). Inside the notebooks a FileDataset is created in Azure from this web address. For the AutoML experiment the file is the downloaded locally and converted to a TabularDataset, which can be fed to AutoML. For the HyperDrive experiment the FileDataset is passed to the training script as a mount.
 
 
 ## Automated ML
@@ -156,7 +156,7 @@ Its base learners are:
 
 A better model may be found if we allow AutoML to run longer than 1 hour.
 
-Below, is a screenshot of the RunDetails widget created while running auto_ml.ipynb:
+Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_ml.ipynb):
 
  ![image](automl_run_details.png)
  
@@ -173,14 +173,24 @@ Here 'lab' stands for an embedding in the (roughly) perceptually uniform  L\*a\*
 In the hyperparameter tuning procedure, we use Bayesian parameter sampling, because our hyperparamter sample space is relatively small and we have enough budget to explore it. 
 Like in our AutoML experiment, we choose accuracy as our primary metric and apply 5-fold cross-validation to be enhance the stability of its estimate. We do no set an early termination policy, because this is not supported when using Bayesian sampling. The running time, is hoever restricted by setting the maximum number of runs to 100. The maximum number of concurrent runs is set to 1, to let each run benefit fully from previously completed runs, which will enhance the sampling convergence.
 
-
-
 ### Results
-*TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
-
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
+The best model resulting from our hyperparameter search used 33 distance-weighted neighbors in L\*a\*b\*-space and had an accuracy of 80.75%.  
 
 
+Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_ml.ipynb):
+
+ ![image](hyperdrive_run_details.png)
+ 
+After registration, the best model looks like this in Azure ML Studio:
+ ![image](hyperdrive_best_model.png)
+
+A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probrably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
+
+*3D scatter chart of the top 10 runs*
+![image](hyperdrive_top_ten.png)
+
+*3D scatter chart of all runs*
+![image](hyperdrive_all.png)
 ## Model Deployment
 We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better we have only documented that one in detail. It takes in a list of Red-Green-Blue dictionaries and produces a list od color shade strings as a response. The exact way to address the model endpoint can be found in the [automl.ipynb](automl.ipynb) (second cell under "Model Deployment"), or alternatively in [endpoint_automl.py](endpoint_automl.py).
 
