@@ -1,28 +1,31 @@
 # Color shade classification
 
-In this project we try to build a color shade classifier for RGB-triplets that can help colorblind people determine what color they are looking at. We train classifiers using AutoML and hyperparameter optimization and deploy the best model to a webservice that can then be accessed by a color shae app to determine the shade of a color mpatch. This last step, hpwever, is outside the scope of this project, which focuses on the machine learning part.
+In this project we try to build a color shade classifier for RGB-triplets that can help colorblind people determine what color they are looking at. We train classifiers using AutoML and hyperparameter optimization and deploy the best model to a webservice that can then be accessed by a color shade app to determine the shade of a color match. This last step, however, is outside the scope of this project, which focuses on the machine learning part.
 
 ## Project Set Up and Installation
-The project consists of two notebooks, automl.ipynb and hyperparameter_tuning.ipynb, which run by default on any standard compute in AzureML. For the deployed webservice that is created in one of the notebooks, a .yml-file is included that defines the environment that is required to run the service.
+The project consists of two notebooks, automl.ipynb and hyperparameter_tuning.ipynb, which run by default on any standard compute in AzureML. The only adaptation that we recommend to make to the standard configuration is to update the version of the AzureML SDK to match the one used on the compute clusters, thus preventing warnings when printing out AutoML model details. Another issue to remember is that the notebooks require to have the wokspace configuration (config.json) inside their directories. 
+
+This repository included the environment (.yml) files and scoring scripts needed for deployment. In case of the AutoML experiment these are generated while running the notebook. The environment script for the deployment of the hyperdrive model is also generated within the notebook, but the scoring script hyperdrive_score.py needs to be uploaded in advance to the directory where hyperparameter_tuning.ipynb resides. 
 
 ## Dataset
 
 ### Overview
 The dataset that we use can be downloaded from: https://github.com/zgoey/azure_ml_capstone/blob/master/color_shades.csv. 
 Each data sample contains of a RGB-triplet and an associated basic color shade. The shades that we discern are 
-white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. The notebook automl.ipynb expplians in detail how this dataset was generated.
+white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. The notebook automl.ipynb explains in detail how this dataset was generated. 
+
 
 ### Task
-We are going to determine the color shae of color patches using the dataset above. The features that we are going to use for this are the values of the red, green and blue channel of the color patch.
+The problem that we wish to solve is the determination of the color shade of color patches. The features that we are going to use for this are the values of the red, green and blue channel of the color patch. The notebook automl.ipynb trains AutoML mdoels to carry out this task and the notebook hyperparameter_tuning.ipynb tries to achieve the same using hyperparameter tuning of a k-nearest-neighbor model.
 
 ### Access
-Both notebooks contain code to upload the data from its Web location (or, to be precise, from https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv). After uploading the dataset is registered in Azure and from then on, all the code can access it from there.
+Both notebooks contain code to upload the data from its Web location (or, to be precise, from https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv). Inside the notebooks a FileDataset is created in Azure from this web address. For the AutoML experiment the file is the downloaded locally and converted to a TabularDataset, which can be fed to AutoML. For the Hyperdrive experiment the FileDataset is passed to the training script as a mount.
+
 
 ## Automated ML
-In our AutoML experiment, we set the task to classification, with the target column is set to "Shade", since that is what we wish to predict. We choose accuracy as our primary metric and apply 5-fold cross-validation to be enhance the stability of its estimate. To be sure that we do not run our experiment forever, we limit the time that the experiment will run to 1 hour. Concurrency is maximally used bu setting the maximum number of concurrent iterations to 4, which is the maximum that our compute cluster can deliver.
+In our AutoML experiment, we set the task to classification, with the target column is set to "Shade", since that is what we wish to predict. We choose accuracy as our primary metric and apply 5-fold cross-validation to be enhance the stability of its estimate. To be sure that we do not run our experiment forever, we limit the time that the experiment will run to 1 hour. Concurrency is maximally used by setting the maximum number of concurrent iterations to 4, which is the maximum that our compute cluster can deliver.
 
 ### Results
-*TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
 The best AutoML model is a StackEnsemble, which reaches an accuracy of 81.05%. Its meta-learner (shallow view) is given by:
 
 | Learner                                 | Hyperparameters                                | 
@@ -160,7 +163,7 @@ After registration, the best model looks like this in Azure ML Studio:
  ![image](automl_model.png)
  
 ## Hyperparameter Tuning
-For the hyperparameter tuning, we use  a k-nearest neighbor model, because it is simple and at the same time flexible enough to capture complicated decision boundaries. Using Bayesian parameter sampling, we try to optimize over three parameters:
+For the hyperparameter tuning, we use  a k-nearest-neighbor model, because it is simple and at the same time flexible enough to capture complicated decision boundaries. Using Bayesian parameter sampling, we try to optimize over three parameters:
  1. Number of neighbors (range = {1,2,...,100})
  2. Neighbor voting weigts (range = {'uniform', 'distance'})
  3. Embedding preceding neighbor search (range = {'none', 'lab', 'nac'}
