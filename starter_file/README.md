@@ -237,6 +237,6 @@ To make this project better, the following ideas could be carried out in the fut
 3. Profile the model in order to determine the optimal deployment configuration.
 4. Save the model in ONNX-format so that it can also be used off-line in different environments.
 5. Add logging to the web service so we can adequately monitor its usage once it is in production.
-6. Give the web service a front end, so one can actually read in the RGB-values of color patches captured by a camera and get a color space back from the service
+6. Give the web service a front end, so one can actually read in the RGB-values of color patches captured by a camera and get a color shade back from the service
 
 
