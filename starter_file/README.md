@@ -195,7 +195,7 @@ A brief look at the 3D scatter chart of the top 10 runs and the one of all runs 
 ![image](hyperdrive_all.png)
 
 ## Model Deployment
-We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The environment file and scoring are automatically created during the AutoML training and can be found in the outputs directory after the AutoML experiment has finished. In [automl.ipynb](automl.ipynb) we copy them to the notebook directory in the last two cells before "Model Deployment" and then use them in the creation of the model endpoint.
+We actually deployed both models as can be seen in the notebooks, but since the AutoML model performed slightly better, we have only documented the AutoML model endpoint in detail. The environment file and scoring are automatically created during the AutoML training and can be found in the outputs directory after the AutoML experiment has finished. In [automl.ipynb](automl.ipynb) we copy them to the notebook directory in the last two cells before "Model Deployment" and then use them to define the inference configuration that is needed for the creation of the model endpoint. We use a deployment configuration with 1 CPU and 1GB memory. This is not necessarily an optimal configuration, but more of a working assumption inspired by example code that we have examined. Later on, we can carry out profiling to optimize out choices for the model at hand. 
 
 In the picture below (taken from the screencast), one can see the endpoint in its active state:
 
