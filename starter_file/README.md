@@ -182,6 +182,7 @@ Below is a screenshot of the RunDetails widget created in [auto_ml.ipynb](auto_m
  ![image](hyperdrive_run_details.png)
  
 After registration, the best model can again be viewed in Azure ML Studio:
+
  ![image](hyperdrive_best_model.png)
 
 A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
