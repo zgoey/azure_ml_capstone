@@ -160,7 +160,7 @@ Below, is a screenshot of the RunDetails widget created while running auto_ml.ip
  ![image](automl_run_details.png)
  
 After registration, the best model looks like this in Azure ML Studio:
- ![image](automl_model.png)
+ ![image](automl_best_model.png)
  
 ## Hyperparameter Tuning
 For the hyperparameter tuning, we use  a k-nearest-neighbor model, because it is simple and at the same time flexible enough to capture complicated decision boundaries. Using Bayesian parameter sampling, we try to optimize over three parameters:
