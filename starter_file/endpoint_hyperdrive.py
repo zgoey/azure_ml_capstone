@@ -2,7 +2,7 @@ import requests
 import json
 
 # URL for the web service
-scoring_uri = 'http://7d57f56e-e7e6-4def-94cb-1661ec122d5f.eastus2.azurecontainer.io/score'
+scoring_uri = 'http://1e75aeda-c4df-4746-98b9-4e209326713e.eastus2.azurecontainer.io/score'
 
 # Input
 data = {"data": [[245, 250, 10]]}
