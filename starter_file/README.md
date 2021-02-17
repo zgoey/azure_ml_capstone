@@ -234,9 +234,9 @@ To make this project better, the following ideas could be carried out in the fut
 
 1. Train the AutoML longer to get a better classifier. 
 2. Carry out a second hyperparameter search to get better kNN parameters. This search should solely focus on the number of neighbors; the weighting should be fixed to "distance" (--weights 1) and the embedding to "lab" (--embedding 1), since our former search has shown that this parameter combination gives the best results.
-3. Give the web service a front end, so one can actually read in the RGB-values of color patches captured by a camera and get a color space back from the service
+3. Profile the model in order to determine the optimal deployment configuration.
 4. Save the model in ONNX-format so that it can also be used off-line in different environments.
-5. Profile the model in order to determine the optimal deployment configuration.
-6. Add logging to the web service so we can adequately monitor its usage once it is in production.
+5. Add logging to the web service so we can adequately monitor its usage once it is in production.
+6. Give the web service a front end, so one can actually read in the RGB-values of color patches captured by a camera and get a color space back from the service
 
 
