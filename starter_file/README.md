@@ -16,7 +16,7 @@ white, black, grey, yellow, red, blue, green, brown, pink, orange and purple. Th
 
 
 ### Task
-The problem that we wish to solve is the determination of the color shade of color patches. The features that we are going to use for this are the values of the red, green and blue channel of the color patch. The notebook automl.ipynb trains AutoML mdoels to carry out this task and the notebook hyperparameter_tuning.ipynb tries to achieve the same using hyperparameter tuning of a k-nearest-neighbor model.
+The problem that we wish to solve is the determination of the color shade of color patches. The features that we are going to use for this are the values of the red, green and blue channel of the color patch. The notebook automl.ipynb trains AutoML mdoels to carry out this task and the notebook [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb) tries to achieve the same using hyperparameter tuning of a k-nearest-neighbor model.
 
 ### Access
 Both notebooks contain code to upload the data from its web location (or, to be precise, from https://raw.githubusercontent.com/zgoey/azure_ml_capstone/master/color_shades.csv). Inside the notebooks, an Azure FileDataset is created from this web address. For the AutoML experiment, the file is then downloaded locally and converted to a TabularDataset, which can be fed to AutoML. For the HyperDrive experiment the FileDataset is passed to the training script as a mounting point.
@@ -179,7 +179,7 @@ Like in our AutoML experiment, we choose accuracy as our primary metric and appl
 ### Results
 The best model resulting from our hyperparameter search used 33 distance-weighted neighbors in L\*a\*b\*-space and had an accuracy of 80.75%.  
 
-Below is a screenshot of the RunDetails widget created in [hyperparameter_tuning.ipynb]hyperparameter_tuning.ipynb):
+Below is a screenshot of the RunDetails widget created in [hyperparameter_tuning.ipynb](hyperparameter_tuning.ipynb):
 
  ![image](hyperdrive_run_details.png)
  
@@ -189,7 +189,7 @@ After registration, the best model can again be viewed in Azure ML Studio:
  
 The screenshot shows the HyperDrive run corresponding to the best kNN model. To the left, we can see that it has been registered under the name "hyperdrive_color_shades" and to the right we see the metrics that were logged by the training script [train.py](train.py) (accuracy: 0.807478122513922, samle weights; distance, embedding: lab, number of neighbors: 33). 
 
-A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparamter search over the number of neighbors. 
+A brief look at the 3D scatter chart of the top 10 runs and the one of all runs (see below) immediately shows what could be improved. As we can see the top 10 runs all use embedding=1, which corresponds to an embedding in L\*a\*b\* space (see [train.py](train.py)) and almost all use weights=1, which corresponds to distance-weighting. However, relatively little runs were made using this combination. So we could probably make further improvements by both fixing the embedding and weights to 1 (distance-weighting in L\*a\*b\* space) and then running another hyperparameter search over the number of neighbors. 
 
 *3D scatter chart of the top 10 runs*
 ![image](hyperdrive_top_ten.png)
